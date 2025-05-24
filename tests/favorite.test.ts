@@ -16,7 +16,7 @@ describe("Favorite Endpoints", () => {
             await mongoose.connect(process.env.MONGODB_URI as string);
         }
 
-        await request(app).post("/auth/register").send({
+        await request(app).post("/auth/signin").send({
             email: testEmail,
             password: testPassword
         });

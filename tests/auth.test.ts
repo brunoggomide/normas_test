@@ -18,9 +18,9 @@ describe("Auth Endpoints", () => {
         await mongoose.connection.close();
     });
 
-    it("should register a new user", async () => {
+    it("should signin a new user", async () => {
         const res = await request(app)
-            .post("/auth/register")
+            .post("/auth/signin")
             .send({ email: testEmail, password: testPassword });
 
         expect(res.status).toBe(201);

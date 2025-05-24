@@ -4,7 +4,6 @@ import { authMiddleware } from "../middlewares/auth.middleware";
 
 const router = Router();
 
-// @ts-expect-error false positive from VSCode
 router.use(authMiddleware);
 
 router.post("/", addFavorite);

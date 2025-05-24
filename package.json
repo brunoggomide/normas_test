@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "start": "ts-node-dev --respawn --transpile-only src/index.ts",
-    "test": "jest"
+    "test": "dotenv -e .env.test -- jest"
   },
   "keywords": [],
   "author": "",
