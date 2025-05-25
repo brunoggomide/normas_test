@@ -1,79 +1,100 @@
 # 📸 Unsplash Favorites API
 
-A backend application that allows users to search for images using the Unsplash API, save images as favorites, view their collection, and remove favorites. The favorites module is protected by JWT authentication.
+A backend API that allows users to:
+
+* Search images from Unsplash
+* Create an account and authenticate with JWT
+* Save favorite images
+* Retrieve and delete favorites
+
+Built with Node.js, Express, TypeScript, MongoDB, Mongoose, and Docker.
 
 ---
 
-## 🚀 Tech Stack
+## ✨ Technologies
 
-* Node.js + Express
-* TypeScript
-* MongoDB + Mongoose
-* JWT (Authentication)
-* Axios (HTTP client)
-* Unsplash API
+* **Node.js** + **Express**
+* **TypeScript**
+* **MongoDB** with **Mongoose**
+* **JWT** Authentication
+* **Axios** for external requests
+* **Jest** for testing
+* **Docker** for containerization
 
 ---
 
-## 📦 Setup Instructions
+## 📂 Project Setup
 
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/brunoggomide/unsplash-api.git
+git clone https://github.com/brunoggomide/normas_test.git
 cd unsplash-api
 ```
 
-### 2. Install dependencies
+### 2. Create environment files
 
-```bash
-npm install
-```
+Create the following environment files in the project root:
 
-### 3. Environment variables
-
-Create a `.env` file in the root directory with the following content:
+#### `.env.docker`
 
 ```env
+# MongoDB connection (Docker)
+MONGODB_URI=mongodb://admin:admin123@mongo:27017/db_norma?authSource=admin
+
+# JWT secret used for signing tokens
+JWT_SECRET=your_jwt_secret
+
+# Unsplash API access key
+UNSPLASH_ACCESS_KEY=your_unsplash_access_key
+
+# Internal port used by the application
 PORT=3000
-MONGODB_URI=your_mongodb_config
+```
+
+#### `.env.test`
+
+```env
+# MongoDB connection (Test)
+MONGODB_URI=mongodb://admin:admin123@mongo:27017/test?authSource=admin
+
 JWT_SECRET=your_jwt_secret
 UNSPLASH_ACCESS_KEY=your_unsplash_access_key
 ```
 
-> You can use MongoDB locally (via Docker) or connect to a MongoDB Atlas cluster.
+---
 
-### 4. Run the project
+## 🛠️ Run with Docker
+
+### Start the app (and MongoDB)
 
 ```bash
-npm start
+docker-compose up --build
+```
+
+> This command builds the image and starts both the MongoDB and application containers.
+
+### Start only the app (after built)
+
+```bash
+docker-compose up app
+```
+
+### Run tests
+
+```bash
+docker-compose run --rm tests
 ```
 
 ---
 
-## 🧪 Testing
+## 📊 API Endpoints
 
-Automated tests will be added soon using Jest and Supertest.
+### 📅 Auth
 
----
+#### ✉️ POST `/auth/signup`
 
-## 🔐 Authentication
-
-This API uses JWT-based authentication. After logging in, pass the token in the header:
-
-```
-Authorization: Bearer {your_token}
-```
-
----
-
-## 📛 API Endpoints
-
-### 📋 Auth
-
-#### ✉️ POST `/auth/register`
-
-Registers a new user.
+Create a new user.
 
 **Body:**
 
@@ -86,7 +107,7 @@ Registers a new user.
 
 #### 🔐 POST `/auth/login`
 
-Logs in and returns a JWT token.
+Authenticate and receive a JWT token.
 
 **Body:**
 
@@ -103,18 +124,16 @@ Logs in and returns a JWT token.
 { "token": "..." }
 ```
 
----
+### 🔍 Search
 
-### 🔍 Image Search
+#### GET `/search?query={term}&page={number}&perPage={number}`
 
-#### 🔍 GET `/search?query={term}&page=1&perPage=10`
-
-Searches for images on Unsplash.
+Search for images via the Unsplash API.
 
 **Example:**
 
 ```
-GET /search?query=cat&page=1&perPage=5
+GET /search?query=dog&page=2&perPage=5
 ```
 
 **Response:**
@@ -123,40 +142,32 @@ GET /search?query=cat&page=1&perPage=5
 [
   {
     "id": "abc123",
-    "width": 3000,
-    "height": 2000,
-    "description": "A cat photo",
-    "urls": {
-      "raw": "...",
-      "full": "...",
-      "regular": "...",
-      "small": "...",
-      "thumb": "..."
-    }
+    "widht": 3024,
+    "height": 4032,
+    "description": "A dog image",
+    "urls": { ... }
   }
 ]
 ```
 
----
-
 ### ⭐ Favorites (requires JWT)
 
-#### ➕ POST `/favorites`
-
-Adds an image to the user's favorites.
-
-**Headers:**
+**Header required for all routes below:**
 
 ```
 Authorization: Bearer {token}
 ```
 
+#### ➕ POST `/favorites`
+
+Add an image to your favorites.
+
 **Body:**
 
 ```json
 {
-  "imageId": "abc123",
-  "description": "cute cat",
+  "imageId": "K0z5kQv0Rls",
+  "description": "a cat sitting on top of a wooden fence",
   "urls": {
     "raw": "...",
     "full": "...",
@@ -167,38 +178,24 @@ Authorization: Bearer {token}
 }
 ```
 
----
+#### 🔍 GET `/favorites`
 
-#### 🔎 GET `/favorites`
-
-Returns all favorites of the authenticated user.
-
-**Headers:**
-
-```
-Authorization: Bearer {token}
-```
-
----
+Returns all favorites for the authenticated user.
 
 #### ❌ DELETE `/favorites/:id`
 
 Removes a favorite image by its ID.
 
-**Headers:**
-
-```
-Authorization: Bearer {token}
-```
-
 ---
 
-## 🐳 Docker
+## 🔧 Testing
 
-Docker support will be added soon.
+Tests are written using Jest and run inside Docker.
 
----
+Run tests:
 
-## 👨‍💼 Author
+```bash
+docker-compose run --rm tests
+```
 
-Bruno Gomide
+> Tests will use the `.env.test` configuration and connect to the Mongo test database.
