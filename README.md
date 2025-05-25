@@ -29,7 +29,7 @@ Built with Node.js, Express, TypeScript, MongoDB, Mongoose, and Docker.
 
 ```bash
 git clone https://github.com/brunoggomide/normas_test.git
-cd unsplash-api
+cd normas_test
 ```
 
 ### 2. Create environment files
